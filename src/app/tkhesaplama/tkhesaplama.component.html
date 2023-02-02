@@ -1,0 +1,238 @@
+<html>
+  <body>
+    <br />
+    <h1 class="page-title" style="text-align: center">
+      <b>Taşıt Kredisi Hesaplama Sayfası</b>
+    </h1>
+    <h3 class="page-description" style="text-align: center">
+      (Kredi tutarını ve kredi vadesini yazıp,taksit tutarı tablosunu
+      görebilirsiniz.)
+    </h3>
+    <hr />
+    <div class="duz-cerceve">
+      <br />
+      <h1 style="color: indigo; text-align: center">
+        <b>Taksit Tutarını Hesapla</b>
+      </h1>
+      <hr />
+      <form>
+        <div class="mb-3">
+          <label for="kredi" class="form-label" style="margin-left: 10px">
+            <b>Kredi Tipi : Taşıt Kredisi </b></label
+          >
+        </div>
+        <hr />
+        <div class="mb-3">
+          <label for="faiz" class="form-label" style="margin-left: 10px"
+            ><b> Faiz : % 2.0 </b></label
+          >
+        </div>
+        <hr />
+        <div class="mb-3">
+          <div class="slidecontainer">
+            <label for="tutar" class="form-label"
+              ><b> Kredi Tutarı (TL):</b></label
+            >
+            <input
+              type="range"
+              step="500"
+              min="5000"
+              max="1000000"
+              value="1"
+              class="slider"
+              id="myRange"
+              name="tutar"
+              [(ngModel)]="tutar"
+            />
+            <span id="demo"></span>
+            <input
+              style="border-radius: 20px; background-color: rgb(243, 244, 245)"
+              class="form-control"
+              name="tutar"
+              [(ngModel)]="tutar"
+              readonly
+            />
+          </div>
+          <hr />
+          <div class="mb-3">
+            <div class="slidecontainer">
+              <label for="vade" class="form-label"><b> Vade (Ay) : </b> </label>
+              <input
+                type="range"
+                min="3"
+                max="48"
+                value="1"
+                class="slider"
+                id="myRange"
+                name="vade"
+                [(ngModel)]="vade"
+              />
+              <span id="demo"></span>
+              <input
+                style="
+                  border-radius: 20px;
+                  background-color: rgb(243, 244, 245);
+                "
+                class="form-control"
+                name="vade"
+                [(ngModel)]="vade"
+                readonly
+              />
+            </div>
+          </div>
+        </div>
+        <button
+          color="primary"
+          (click)="addHesaplama()"
+          class="btn btn-primary"
+          style="
+            background-color: #6600ff;
+            color: white;
+            width: 90%;
+            height: 10%;
+            border-radius: 10px;
+            margin-left: 28px;
+          "
+        >
+          Hesapla
+        </button>
+      </form>
+      <div *ngIf="isShown">
+        <div class="card" style="margin-block-start: -470px; height: 490px">
+          <div class="card-body">
+            <h2
+              class="card-title"
+              (click)="openPlan()"
+              style="text-align: center; color: indigo"
+            >
+              <b
+                ><button
+                  color="primary"
+                  style="
+                    background-color: darkslategray;
+                    color: white;
+                    width: 70%;
+                    height: 10%;
+                    border-radius: 10px;
+                    margin-left: 28px;
+                  "
+                >
+                  Örnek Ödeme Planı için tıklayınız
+                </button>
+              </b>
+            </h2>
+            <hr />
+            <table>
+              <h3><b>Kredi Tipi : </b> Taşıt Kredisi</h3>
+              <hr />
+              <h3><b>Faiz Oranı :</b> % 2.00</h3>
+              <hr />
+              <h3><b>Kredi Tutarı :</b> {{ tutar }} TL</h3>
+              <hr />
+              <h3><b>Kredi Vadesi :</b> {{ vade }} Ay</h3>
+              <hr />
+              <h3><b>Taksit Tutarı :</b> {{ taksit() }} TL</h3>
+              <hr />
+              <h3>
+                <b style="color: red">Geri Ödenecek Toplam Tutar: </b>
+                {{ borc() }} TL
+              </h3>
+            </table>
+            <hr />
+          </div>
+        </div>
+      </div>
+      <div *ngIf="planShown">
+        <div
+          class="card"
+          style="
+            margin-block-start: -505px;
+            height: 510px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+          "
+        >
+          <div class="card-body">
+            <table>
+              {{
+                itfa()
+              }}
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Taksit Miktarı</th>
+                  <th scope="col">Taksit Tutarı</th>
+                  <th scope="col">Faiz</th>
+                  <th scope="col">KKDF</th>
+                  <th scope="col">BSMV</th>
+                  <th scope="col">Anapara</th>
+                  <th scope="col">Kalan Anapara</th>
+                </tr>
+              </thead>
+              <thead>
+                <tr>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ i + 1 }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.tt[0] }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.FaizArray[i] }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.KKDFarray[i] }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.BSMVarray[i] }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.AnaparaArray[i] }}
+                      <hr />
+                    </div>
+                  </th>
+                  <th scope="row">
+                    <div *ngFor="let item of this.new; let i = index">
+                      {{ this.KalanAnaParaArray[i] }}
+                      <hr />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <!-- <button 
+              color="primary"
+              style="
+                background-color:darkslateblue;
+                color: white;
+                width: 70%;
+                height: 10%;
+                border-radius: 10px;
+                margin-left: 70px;
+              "
+            >
+              <a routerLink="/" style="color:white">Anasayfaya Dönmek İçin Tıklayınız</a>
+            </button>-->
+            </table>
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="slider.js"></script>
+</html>
